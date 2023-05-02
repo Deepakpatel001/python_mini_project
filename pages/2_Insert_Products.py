@@ -53,7 +53,7 @@ def insert_products():
             else:
                 sql = "INSERT INTO product(Product_Id,Product_Name,Category_Id,Price)VALUES (%s, %s, %s, %s)"
                 data1 = (int(insert_product_id), str(insert_product_name), str(insert_product_category), float(insert_product_price))
-                data = cnx.execute(sql,data1)
+                cnx.execute(sql,data1)
                 mydb.commit()
                 st.success("Product Added ")
             mydb.close()
@@ -63,7 +63,7 @@ def insert_products():
 
 mydb = db_cnx()
 cnx = mydb.cursor()
-sql = f"select * from  category"
+sql = "select * from  category"
 cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
