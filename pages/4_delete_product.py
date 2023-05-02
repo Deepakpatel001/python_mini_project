@@ -17,7 +17,6 @@ def del_product():
         products_id = int(st.session_state.del_product_id)
         mydb = db_cnx()
         cnx = mydb.cursor()
-        print(f"delete from Product where product_id = {products_id}")
         cnx.execute(f"select * from Product where product_id = {products_id}")
         data = cnx.fetchall()
         if data:

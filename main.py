@@ -3,7 +3,22 @@ import mysql.connector
 import pandas as pd
 from st_aggrid import GridOptionsBuilder, AgGrid
 #
-st.title("hello")
+st.set_page_config(page_title="The Tech collective",page_icon="🧊")
+st.title("The Tech Collective")
+st.subheader("Python Mini Project ")
+
+st.subheader("Project contributors")
+
+st.write("Deepak Patel (Team Lead)")
+col1, col2= st.columns(2)
+with col1:
+    st.write("Ajinkya Fuke (Database)")
+    st.write("Aditya Ugale (Frontend)")
+    st.write("Arpit Tiwari (Backend)")
+with col2:
+    st.write("Aishwarya Chopade (Database)")
+    st.write("Akshay Shetty (Frontend)")
+    st.write("Charudatta Patil (Backend)")
 
 
 # def db_cnx():
