@@ -13,13 +13,12 @@ def db_cnx():
     return mydb
 
 
-def products():
+def Category():
     mydb = db_cnx()
-
-    cnx= mydb.cursor()
-    cnx.execute("select * from Product")
+    cnx = mydb.cursor()
+    cnx.execute("select * from category")
     df = pd.DataFrame(cnx)
-    df = df.rename(columns={0: 'Product_Id', 1: 'Product_Name', 2: 'Category_Id', 3: 'Price'})
+    df = df.rename(columns={0: 'Category_Id', 1: 'Category_Name'})
     gb = GridOptionsBuilder.from_dataframe(df)
 
     gridoptions = gb.build()
@@ -29,6 +28,5 @@ def products():
         gridOptions=gridoptions,
         fit_columns=False,
     )
-
-st.title("View all Products: ")
-products()
+st.title("View all Category: ")
+Category()

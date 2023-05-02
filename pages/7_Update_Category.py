@@ -17,27 +17,27 @@ def data_cat_update():
         mydb = db_cnx()
 
         cnx = mydb.cursor()
-        cnx.execute("select * from category")
+        cnx.execute(f"select * from category where category_id = {st.session_state.update_category_id}")
         old_data = cnx.fetchall()
-        st.text_input("Category Name", key="update_category_name",value=old_data[0][1])
-    fetch = st.button("Fetch",key="fetch")
-    if fetch:
-        update_category_id = st.session_state.update_category_id
-        update_category_name = st.session_state.update_category_name
-        update_btn = st.button("Update", key="update_btn")
-        if update_btn:
-            if update_category_id == "":
-                st.error("Enter a category Id")
-            else:
-                mydb = db_cnx()
-                cnx = mydb.cursor()
-                sql = "UPDATE category SET category_Name = %s"
-                data1 = (str(update_category_name))
-                cnx.execute(sql,data1)
-                mydb.commit()
-                st.success("Category updated ")
-                mydb.close()
-
+        if old_data:
+            st.text_input("Category Name", key="update_category_name",value=old_data[0][1])
+            update_category_id = st.session_state.update_category_id
+            update_category_name = st.session_state.update_category_name
+            update_btn = st.button("Update", key="update_btn")
+            if update_btn:
+                if update_category_id == "":
+                    st.error("Enter a category Id")
+                else:
+                    mydb = db_cnx()
+                    cnx = mydb.cursor()
+                    sql = "UPDATE category SET category_Name = %s WHERE category_id  = %s"
+                    data1 = (str(update_category_name),int(update_category_id))
+                    cnx.execute(sql,data1)
+                    mydb.commit()
+                    st.success("Category updated ")
+                    mydb.close()
+        else:
+            st.error("Wrong Category Id")
 
 
 st.title("Update a category")
@@ -56,6 +56,8 @@ if st.session_state.search_btn:
         data = cnx.fetchall()
         if data:
             st.success("category found")
+        else:
+            st.error("Wrong Category Id")
 
 
 pages = {
