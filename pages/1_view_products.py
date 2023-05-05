@@ -27,7 +27,6 @@ def products():
     AgGrid(
         df,
         gridOptions=gridoptions,
-        fit_columns=False,
     )
 
 st.title("View all Products: ")

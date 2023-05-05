@@ -2,8 +2,15 @@ import streamlit as st
 import mysql.connector
 import pandas as pd
 from st_aggrid import GridOptionsBuilder, AgGrid
+from streamlit_option_menu import option_menu
+
 #
 st.set_page_config(page_title="The Tech collective",page_icon="🧊")
+
+
+
+
+
 st.title("The Tech Collective")
 st.subheader("Python Mini Project ")
 
@@ -19,6 +26,11 @@ with col2:
     st.write("Aishwarya Chopade (Database)")
     st.write("Akshay Shetty (Frontend)")
     st.write("Charudatta Patil (Backend)")
+
+
+if 'login' not in st.session_state:
+
+    st.session_state['login'] = 'Logged in'
 
 
 # def db_cnx():

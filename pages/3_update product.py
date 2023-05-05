@@ -22,16 +22,17 @@ def data_update():
             st.text_input("Product Name", key="update_product_name",value=old_data[0][1])
             st.text_input("Product Category", key="update_product_category",value=old_data[0][2])
             st.number_input ("Product Price", key="update_product_price",value=float(old_data[0][3]))
-            update_product_id = str(st.session_state.update_product_id)
-            update_product_name = str(st.session_state.update_product_name)
-            update_product_category = str(st.session_state.update_product_category)
-            update_product_price = str(st.session_state.update_product_price)
             update_btn = st.button("Update")
+
             if update_btn:
+                update_product_id = str(st.session_state.update_product_id)
+                update_product_name = str(st.session_state.update_product_name)
+                update_product_category = str(st.session_state.update_product_category)
+                update_product_price = str(st.session_state.update_product_price)
                 if update_product_id == "":
                     st.error("Enter a Product Id")
                 else:
-                    if(update_product_id.isnumeric() and update_product_name.isalpha() and update_product_category.isnumeric()) :
+                    if(update_product_id.isnumeric() and update_product_category.isnumeric()) :
                         mydb = db_cnx()
                         cnx = mydb.cursor()
                         sql = "UPDATE product SET Product_Name = %s, Category_Id = %s, Price = %s WHERE Product_Id = %s"
