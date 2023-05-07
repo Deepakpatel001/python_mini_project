@@ -6,21 +6,21 @@ from streamlit_extras.switch_page_button import switch_page
 
 
 if 'Logged_Username' not in st.session_state:
-    switch_page("Login")
+    switch_page("Home")
 
 
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
     col1,col2 = st.columns(2)
     with col1:
-        st.write("Hello",st.session_state.Logged_Username)
+        st.write("Hello",st.session_state.Logged_Username,"(",st.session_state.User_Role,")")
     with col2:
         logout = st.button("Logout")
         if logout:
             del st.session_state.Logged_Username
             del st.session_state.User_Role
-            switch_page("Login")
+            switch_page("Home")
 
-
+st.image("banner_2.jpg")
 
 
 
@@ -47,9 +47,9 @@ def products():
     st.subheader("Product List: ")
     mydb = db_cnx()
     cnx = mydb.cursor()
-    cnx.execute("select * from Product")
+    cnx.execute("select p.product_id,p.product_name,p.price,c.category_name from product p join category c on c.category_id =p.category_id;")
     df = pd.DataFrame(cnx)
-    df = df.rename(columns={0: 'Product_Id', 1: 'Product_Name', 2: 'Category_Id', 3: 'Price'})
+    df = df.rename(columns={0: 'Product_Id', 1: 'Product_Name', 2: 'Price', 3: 'Category'})
     gb = GridOptionsBuilder.from_dataframe(df)
 
     gridoptions = gb.build()
@@ -71,10 +71,10 @@ def insert_products():
     choices = dict((x, y) for x, y in data1)
 
     st.subheader("Add Products:")
-    st.text_input("Product Id:", key="insert_product_id")
-    st.text_input("Product Name:", key="insert_product_name")
+    st.text_input("Product Id:", key="insert_product_id",placeholder="123456")
+    st.text_input("Product Name:", key="insert_product_name",placeholder="Mango")
     option = st.selectbox("Product Category", options=list(choices.keys()), format_func=format_func_cat)
-    st.text_input("Product Price:", key="insert_product_price")
+    st.text_input("Product Price:", key="insert_product_price",placeholder="125")
     insert_btn = st.button("Add")
     insert_product_id = st.session_state.insert_product_id
     insert_product_name = st.session_state.insert_product_name

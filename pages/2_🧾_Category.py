@@ -5,20 +5,20 @@ from st_aggrid import GridOptionsBuilder, AgGrid
 from streamlit_extras.switch_page_button import switch_page
 
 if 'Logged_Username' not in st.session_state:
-    switch_page("Login")
+    switch_page("Home")
 
 
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
     col1,col2 = st.columns(2)
     with col1:
-        st.write("Hello",st.session_state.Logged_Username)
+        st.write("Hello",st.session_state.Logged_Username,"(",st.session_state.User_Role,")")
     with col2:
         logout = st.button("Logout")
         if logout:
             del st.session_state.Logged_Username
             del st.session_state.User_Role
-            switch_page("Login")
-st.write("---")
+            switch_page("Home")
+st.image("banner_3.jpg")
 
 def db_cnx():
     mydb = mysql.connector.connect(
