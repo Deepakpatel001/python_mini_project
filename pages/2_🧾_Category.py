@@ -11,7 +11,7 @@ if 'Logged_Username' not in st.session_state:
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
     col1,col2 = st.columns(2)
     with col1:
-        st.write("Hello",st.session_state.Logged_Username,"(",st.session_state.User_Role,")")
+        st.write("Hello", st.session_state.Logged_Username, "(", st.session_state.User_Role, ")")
     with col2:
         logout = st.button("Logout")
         if logout:
@@ -20,17 +20,20 @@ if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state)
             switch_page("Home")
 st.image("banner_3.jpg")
 
+
 def db_cnx():
     mydb = mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="Night@123",
+        user="ecommerce",
+        password="Strom@123",
         database="ecommerce_management"
     )
     return mydb
 
+
 def format_func(option):
     return CHOICES[option]
+
 
 def Category():
     st.title("View all Category: ")
@@ -55,8 +58,8 @@ def Category():
 def insert_Category():
 
     st.title("Insert a category:")
-    st.text_input("Category Id:",key="insert_category_id",placeholder="123")
-    st.text_input("Category Name:",key="insert_category_name",placeholder="Fruits")
+    st.text_input("Category Id:", key="insert_category_id", placeholder="123")
+    st.text_input("Category Name:", key="insert_category_name", placeholder="Fruits")
     insert_btn = st.button("Add")
     insert_category_id = st.session_state.insert_category_id
     insert_category_name = st.session_state.insert_category_name
@@ -109,8 +112,8 @@ def update_category():
                     mydb = db_cnx()
                     cnx = mydb.cursor()
                     sql = "UPDATE category SET category_id = %s, category_Name = %s WHERE category_id  = %s"
-                    data1 = (int(update_category_id),str(update_category_name),int(option))
-                    cnx.execute(sql,data1)
+                    data1 = (int(update_category_id), str(update_category_name), int(option))
+                    cnx.execute(sql, data1)
                     mydb.commit()
                     st.success("Category updated ")
                     mydb.close()

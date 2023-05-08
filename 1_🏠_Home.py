@@ -2,19 +2,20 @@ import streamlit as st
 import mysql.connector
 from streamlit_extras.switch_page_button import switch_page
 
+
 def db_cnx():
     mydb = mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="Night@123",
+        user="ecommerce",
+        password="Strom@123",
         database="ecommerce_management"
     )
     return mydb
+
+
 def login():
-
-
-    st.text_input("User Name:",key="user_name",placeholder="Admin")
-    st.text_input("Password:",key="password",type="password",placeholder="Password")
+    st.text_input("User Name:", key="user_name", placeholder="Admin")
+    st.text_input("Password:", key="password", type="password", placeholder="Password")
     login_btn = st.button("Login")
 
     if login_btn:
@@ -61,9 +62,11 @@ def add_customer():
                 cnx.execute(sql, data1)
                 mydb.commit()
                 mydb.close()
-                st.success(f"{add_user_name} Created please Login" )
+                st.success(f"{add_user_name} Created please Login")
         else:
             st.error("Passwords do not match.")
+
+
 def login_auth():
     if 'Logged_Username' not in st.session_state:
         st.subheader("Login")
@@ -77,12 +80,10 @@ def login_auth():
         st.success("You already logged in")
 
 
-
-
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
-    col1,col2 = st.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
-        st.write("Hello",st.session_state.Logged_Username,"(",st.session_state.User_Role,")")
+        st.write("Hello", st.session_state.Logged_Username, "(", st.session_state.User_Role, ")")
     with col2:
         logout = st.button("Logout")
         if logout:

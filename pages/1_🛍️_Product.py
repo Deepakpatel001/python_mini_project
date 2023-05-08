@@ -10,9 +10,9 @@ if 'Logged_Username' not in st.session_state:
 
 
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
-    col1,col2 = st.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
-        st.write("Hello",st.session_state.Logged_Username,"(",st.session_state.User_Role,")")
+        st.write("Hello", st.session_state.Logged_Username, "(", st.session_state.User_Role, ")")
     with col2:
         logout = st.button("Logout")
         if logout:
@@ -23,12 +23,11 @@ if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state)
 st.image("banner_2.jpg")
 
 
-
 def db_cnx():
     mydb = mysql.connector.connect(
         host="localhost",
-        user="root",
-        password="Night@123",
+        user="ecommerce",
+        password="Strom@123",
         database="ecommerce_management"
     )
     return mydb
@@ -41,8 +40,11 @@ def format_func_cat(option):
 def format_func_prod(option):
     return CHOICES_prod[option]
 
+
 def format_func_update_prod(option):
     return CHOICES_update_prod[option]
+
+
 def products():
     st.subheader("Product List: ")
     mydb = db_cnx()
@@ -71,8 +73,8 @@ def insert_products():
     choices = dict((x, y) for x, y in data1)
 
     st.subheader("Add Products:")
-    st.text_input("Product Id:", key="insert_product_id",placeholder="123456")
-    st.text_input("Product Name:", key="insert_product_name",placeholder="Mango")
+    st.text_input("Product Id:", key="insert_product_id",  placeholder="123456")
+    st.text_input("Product Name:", key="insert_product_name", placeholder="Mango")
     option = st.selectbox("Product Category", options=list(choices.keys()), format_func=format_func_cat)
     st.text_input("Product Price:", key="insert_product_price",placeholder="125")
     insert_btn = st.button("Add")
