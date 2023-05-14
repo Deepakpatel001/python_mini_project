@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -78,6 +79,8 @@ def insert_Category():
             cnx.execute(sql, data1)
             mydb.commit()
             st.success("Category Added ")
+            time.sleep(2)
+            st.experimental_rerun()
         mydb.close()
 
 def update_category():
