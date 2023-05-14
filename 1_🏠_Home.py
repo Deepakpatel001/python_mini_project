@@ -25,6 +25,7 @@ def login():
         cnx = mydb.cursor()
         cnx.execute(f"select * from Admin where User_Name = '{user_name}' and Password = '{password}'")
         data = cnx.fetchall()
+        cnx.close()
         if data:
             st.success("Logged In")
             if 'Logged_Username' not in st.session_state:
@@ -52,13 +53,13 @@ def add_customer():
             sql = f"Select * from admin where user_name = '{add_user_name}'"
             cnx.execute(sql)
             acc_data = cnx.fetchall()
+            cnx.close()
 
             if acc_data:
                 st.error("User name already exist try another user name")
             else:
                 sql = "INSERT INTO admin(User_Name,Password,Confirm_Password,Role)VALUES (%s, %s, %s, %s)"
                 data1 = (str(add_user_name), str(add_password), str(add_confirm_password), 'Customer')
-                print(sql, data1)
                 cnx.execute(sql, data1)
                 mydb.commit()
                 mydb.close()
@@ -90,6 +91,6 @@ if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state)
             del st.session_state.Logged_Username
             del st.session_state.User_Role
             switch_page("Home")
-st.title("Wellcome to Ecommerce Website")
+st.title("Welcome to Ecommerce Website")
 st.image("banner.jpg")
 login_auth()

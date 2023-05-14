@@ -37,15 +37,18 @@ def format_func(option):
 
 
 def Category():
+    Refresh_btn = st.button("Refresh Table")
+    if Refresh_btn:
+        st.experimental_rerun()
     st.title("View all Category: ")
     mydb = db_cnx()
     cnx = mydb.cursor()
     cnx.execute("select * from category")
-
     df = pd.DataFrame(cnx)
     mydb.close()
     df = df.rename(columns={0: 'Category_Id', 1: 'Category_Name'})
     gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_pagination(enabled=True)
 
     gridoptions = gb.build()
 
@@ -71,6 +74,7 @@ def insert_Category():
         sql = f"select * from category where category_id = {insert_category_id}"
         cnx.execute(sql)
         data1 = cnx.fetchall()
+        cnx.close()
         if data1:
             st.error("Category Id already exist")
         else:
@@ -101,6 +105,7 @@ def update_category():
     cnx = mydb.cursor()
     cnx.execute(f"select * from category where category_id = {option}")
     old_data = cnx.fetchall()
+    cnx.close()
     if old_data:
         st.text_input("Category ID", key="update_category_id",value=old_data[0][0])
         st.text_input("Category Name", key="update_category_name",value=old_data[0][1])
@@ -141,6 +146,7 @@ def del_category():
         cnx = mydb.cursor()
         cnx.execute(f"select * from product where category_id = {option}")
         data = cnx.fetchall()
+        cnx.close()
         if data:
             st.error("You cant delete this category")
         else:

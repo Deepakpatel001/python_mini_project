@@ -76,7 +76,6 @@ def insert_products():
     cnx.execute(sql)
     data1 = cnx.fetchall()
     cnx.close()
-    print(data1)
     choices = dict((x, y) for x, y in data1)
 
     st.subheader("Add Products:")
@@ -96,6 +95,7 @@ def insert_products():
             sql = f"select * from  product where product_id = {insert_product_id}"
             cnx.execute(sql)
             data1 = cnx.fetchall()
+            cnx.close()
             if data1:
                 st.error("product Id already found")
             else:
@@ -123,7 +123,6 @@ def product_update():
     cnx.execute(sql)
     data1 = cnx.fetchall()
     cnx.close()
-    print(data1)
     choices = dict((x, y) for x, y in data1)
 
     option = st.selectbox("Select Product For Modify", options=list(choices.keys()), format_func=format_func_update_prod)
@@ -133,6 +132,7 @@ def product_update():
     cnx = mydb.cursor()
     cnx.execute(f"select * from Product where product_id = {option}")
     old_data = cnx.fetchall()
+    cnx.close()
     if old_data:
         st.text_input("Product Name", key="update_product_name",value=old_data[0][1])
         st.text_input("Product Category", key="update_product_category",value=old_data[0][2])
@@ -198,7 +198,6 @@ sql = f"select * from  category"
 cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
-print(data1)
 CHOICES_cat = dict((x, y) for x, y in data1)
 
 mydb = db_cnx()
