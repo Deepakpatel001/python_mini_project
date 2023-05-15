@@ -95,7 +95,6 @@ def insert_products():
             sql = f"select * from  product where product_id = {insert_product_id}"
             cnx.execute(sql)
             data1 = cnx.fetchall()
-            cnx.close()
             if data1:
                 st.error("product Id already found")
             else:

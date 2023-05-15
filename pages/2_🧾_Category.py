@@ -74,7 +74,6 @@ def insert_Category():
         sql = f"select * from category where category_id = {insert_category_id}"
         cnx.execute(sql)
         data1 = cnx.fetchall()
-        cnx.close()
         if data1:
             st.error("Category Id already exist")
         else:
