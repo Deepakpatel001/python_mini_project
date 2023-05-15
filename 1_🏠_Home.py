@@ -38,8 +38,8 @@ def login():
 
 def add_customer():
     st.text_input("username:", key="add_user_name")
-    st.text_input("Password:", key="add_password")
-    st.text_input("Confirm Password:", key="add_confirm_password")
+    st.text_input("Password:", key="add_password",type="password")
+    st.text_input("Confirm Password:", key="add_confirm_password",type="password")
     add_btn = st.button("Create an Account")
 
     if add_btn:
@@ -53,7 +53,6 @@ def add_customer():
             sql = f"Select * from admin where user_name = '{add_user_name}'"
             cnx.execute(sql)
             acc_data = cnx.fetchall()
-            cnx.close()
 
             if acc_data:
                 st.error("User name already exist try another user name")
