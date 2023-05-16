@@ -2,3 +2,4 @@
 
 pip install streamlit
 pip install streamlit-aggrid
+pip install streamlit-extras
