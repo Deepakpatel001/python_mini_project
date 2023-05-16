@@ -14,7 +14,7 @@ def db_cnx():
     )
     return mydb
 
-
+# login session started here
 def login():
     st.text_input("User Name:", key="user_name", placeholder="Admin")
     st.text_input("Password:", key="password", type="password", placeholder="Password")
@@ -30,7 +30,7 @@ def login():
         cnx.close()
         if data:
             passwd = data[0][2]
-            passwd = passwd.encode()
+            passwd = passwd.encode() # password encoded
             key = b'j8rS20etwOw1qH8XeznLLz_tpmwEUuXhKUs_oS8XgOY='
             cipher = Fernet(key)
             passwd = (cipher.decrypt(passwd)).decode()
