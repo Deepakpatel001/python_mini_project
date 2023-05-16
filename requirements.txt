@@ -3,3 +3,4 @@ streamlit==1.22.0
 streamlit-aggrid==0.3.4.post3
 streamlit-extras==0.2.7
 mysql-connector-python~=8.0.33
+cryptography~=40.0.2
