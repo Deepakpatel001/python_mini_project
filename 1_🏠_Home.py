@@ -3,7 +3,7 @@ import mysql.connector
 from streamlit_extras.switch_page_button import switch_page
 from cryptography.fernet import Fernet
 
-# hey
+# database connection started here
 
 def db_cnx():
     mydb = mysql.connector.connect(
