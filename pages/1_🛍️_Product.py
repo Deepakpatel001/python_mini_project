@@ -6,7 +6,7 @@ import pandas as pd
 from st_aggrid import GridOptionsBuilder, AgGrid
 from streamlit_extras.switch_page_button import switch_page
 
-
+# here is code for checking session for login
 if 'Logged_Username' not in st.session_state:
     switch_page("Home")
 
