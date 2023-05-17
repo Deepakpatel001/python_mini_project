@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 import mysql.connector
 import pandas as pd
@@ -47,12 +49,17 @@ def format_func_update_prod(option):
 
 def products():
     st.subheader("Product List: ")
+    Refresh_btn = st.button("Refresh Table")
+    if Refresh_btn:
+        st.experimental_rerun()
     mydb = db_cnx()
     cnx = mydb.cursor()
     cnx.execute("select p.product_id,p.product_name,p.price,c.category_name from product p join category c on c.category_id =p.category_id;")
     df = pd.DataFrame(cnx)
+    cnx.close()
     df = df.rename(columns={0: 'Product_Id', 1: 'Product_Name', 2: 'Price', 3: 'Category'})
     gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_pagination(enabled=True)
 
     gridoptions = gb.build()
 
@@ -69,7 +76,6 @@ def insert_products():
     cnx.execute(sql)
     data1 = cnx.fetchall()
     cnx.close()
-    print(data1)
     choices = dict((x, y) for x, y in data1)
 
     st.subheader("Add Products:")
@@ -94,12 +100,17 @@ def insert_products():
             else:
                 sql = "INSERT INTO product(Product_Id,Product_Name,Category_Id,Price)VALUES (%s, %s, %s, %s)"
                 data1 = (
-                    int(insert_product_id), str(insert_product_name), str(insert_product_category),
-                    float(insert_product_price))
+                    insert_product_id, str(insert_product_name), str(insert_product_category),float(insert_product_price))
                 cnx.execute(sql, data1)
                 mydb.commit()
+
                 st.success("Product Added ")
+                time.sleep(2)
+                st.experimental_rerun()
+
             mydb.close()
+
+
         else:
             st.error("Check the input format")
 
@@ -111,7 +122,6 @@ def product_update():
     cnx.execute(sql)
     data1 = cnx.fetchall()
     cnx.close()
-    print(data1)
     choices = dict((x, y) for x, y in data1)
 
     option = st.selectbox("Select Product For Modify", options=list(choices.keys()), format_func=format_func_update_prod)
@@ -121,6 +131,7 @@ def product_update():
     cnx = mydb.cursor()
     cnx.execute(f"select * from Product where product_id = {option}")
     old_data = cnx.fetchall()
+    cnx.close()
     if old_data:
         st.text_input("Product Name", key="update_product_name",value=old_data[0][1])
         st.text_input("Product Category", key="update_product_category",value=old_data[0][2])
@@ -186,7 +197,6 @@ sql = f"select * from  category"
 cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
-print(data1)
 CHOICES_cat = dict((x, y) for x, y in data1)
 
 mydb = db_cnx()
@@ -195,7 +205,6 @@ sql = "select Product_Id,Product_Name from  product"
 cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
-print(data1)
 CHOICES_prod = dict((x, y) for x, y in data1)
 
 mydb = db_cnx()
@@ -204,7 +213,6 @@ sql = "select Product_Id,Product_Name from  product"
 cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
-print(data1)
 CHOICES_update_prod = dict((x, y) for x, y in data1)
 
 
