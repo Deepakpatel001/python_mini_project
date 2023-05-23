@@ -3,13 +3,12 @@ import time
 import streamlit as st
 import mysql.connector
 import pandas as pd
-from st_aggrid import GridOptionsBuilder, AgGrid
+from st_aggrid import GridOptionsBuilder, AgGrid, ColumnsAutoSizeMode
 from streamlit_extras.switch_page_button import switch_page
 
 # here is code for checking session for login
 if 'Logged_Username' not in st.session_state:
     switch_page("Home")
-
 
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
     col1, col2 = st.columns(2)
@@ -54,18 +53,20 @@ def products():
         st.experimental_rerun()
     mydb = db_cnx()
     cnx = mydb.cursor()
-    cnx.execute("select p.product_id,p.product_name,p.price,c.category_name from product p join category c on c.category_id =p.category_id;")
+    cnx.execute(
+        "select p.product_id,p.product_name,p.price,c.category_name from product p join category c on c.category_id =p.category_id;")
     df = pd.DataFrame(cnx)
     cnx.close()
     df = df.rename(columns={0: 'Product_Id', 1: 'Product_Name', 2: 'Price', 3: 'Category'})
     gb = GridOptionsBuilder.from_dataframe(df)
-    gb.configure_pagination(enabled=True)
+    gb.configure_pagination(enabled=True, paginationAutoPageSize=True, paginationPageSize=10)
 
     gridoptions = gb.build()
 
     AgGrid(
         df,
         gridOptions=gridoptions,
+        columns_auto_size_mode=ColumnsAutoSizeMode.FIT_CONTENTS
     )
 
 
@@ -79,10 +80,10 @@ def insert_products():
     choices = dict((x, y) for x, y in data1)
 
     st.subheader("Add Products:")
-    st.text_input("Product Id:", key="insert_product_id",  placeholder="123456")
+    st.text_input("Product Id:", key="insert_product_id", placeholder="123456")
     st.text_input("Product Name:", key="insert_product_name", placeholder="Mango")
     option = st.selectbox("Product Category", options=list(choices.keys()), format_func=format_func_cat)
-    st.text_input("Product Price:", key="insert_product_price",placeholder="125")
+    st.text_input("Product Price:", key="insert_product_price", placeholder="125")
     insert_btn = st.button("Add")
     insert_product_id = st.session_state.insert_product_id
     insert_product_name = st.session_state.insert_product_name
@@ -100,7 +101,8 @@ def insert_products():
             else:
                 sql = "INSERT INTO product(Product_Id,Product_Name,Category_Id,Price)VALUES (%s, %s, %s, %s)"
                 data1 = (
-                    insert_product_id, str(insert_product_name), str(insert_product_category),float(insert_product_price))
+                    insert_product_id, str(insert_product_name), str(insert_product_category),
+                    float(insert_product_price))
                 cnx.execute(sql, data1)
                 mydb.commit()
 
@@ -124,7 +126,8 @@ def product_update():
     cnx.close()
     choices = dict((x, y) for x, y in data1)
 
-    option = st.selectbox("Select Product For Modify", options=list(choices.keys()), format_func=format_func_update_prod)
+    option = st.selectbox("Select Product For Modify", options=list(choices.keys()),
+                          format_func=format_func_update_prod)
     st.write("---")
     mydb = db_cnx()
 
@@ -133,9 +136,9 @@ def product_update():
     old_data = cnx.fetchall()
     cnx.close()
     if old_data:
-        st.text_input("Product Name", key="update_product_name",value=old_data[0][1])
-        st.text_input("Product Category", key="update_product_category",value=old_data[0][2])
-        st.number_input ("Product Price", key="update_product_price",value=float(old_data[0][3]))
+        st.text_input("Product Name", key="update_product_name", value=old_data[0][1])
+        st.text_input("Product Category", key="update_product_category", value=old_data[0][2])
+        st.number_input("Product Price", key="update_product_price", value=float(old_data[0][3]))
         update_btn = st.button("Update")
 
         if update_btn:
@@ -146,12 +149,13 @@ def product_update():
             if update_product_id == "":
                 st.error("Enter a Product Id")
             else:
-                if(update_product_id.isnumeric() and update_product_category.isnumeric()) :
+                if (update_product_id.isnumeric() and update_product_category.isnumeric()):
                     mydb = db_cnx()
                     cnx = mydb.cursor()
                     sql = "UPDATE product SET Product_Name = %s, Category_Id = %s, Price = %s WHERE Product_Id = %s"
-                    data1 = (str(update_product_name), str(update_product_category), float(update_product_price),int(update_product_id))
-                    cnx.execute(sql,data1)
+                    data1 = (str(update_product_name), str(update_product_category), float(update_product_price),
+                             int(update_product_id))
+                    cnx.execute(sql, data1)
                     mydb.commit()
                     st.success("Product updated ")
                     mydb.close()
@@ -159,6 +163,7 @@ def product_update():
                     st.error("check the format")
     else:
         st.error("Wrong product id")
+
 
 def del_product():
     mydb = db_cnx()
@@ -188,9 +193,6 @@ def del_product():
         mydb.close()
 
 
-
-
-
 mydb = db_cnx()
 cnx = mydb.cursor()
 sql = f"select * from  category"
@@ -214,7 +216,6 @@ cnx.execute(sql)
 data1 = cnx.fetchall()
 cnx.close()
 CHOICES_update_prod = dict((x, y) for x, y in data1)
-
 
 if 'User_Role' in st.session_state and st.session_state.User_Role == "Admin":
     tab1, tab2, tab3, tab4 = st.tabs(["View All Products ", "Add Products", "Modify Products", "Delete Products"])
