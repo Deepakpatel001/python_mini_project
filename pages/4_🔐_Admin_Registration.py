@@ -2,6 +2,9 @@ import streamlit as st
 import mysql.connector
 from streamlit_extras.switch_page_button import switch_page
 from cryptography.fernet import Fernet
+from streamlit_modal import Modal
+import time
+
 
 st.set_page_config(page_title='Admin Registration', page_icon="random")
 
@@ -14,10 +17,6 @@ def db_cnx():
         database="ecommerce_management"
     )
     return mydb
-
-
-def click_home():
-    switch_page("Home")
 
 
 def add_admin():  # added this function to register admins
@@ -51,7 +50,7 @@ def add_admin():  # added this function to register admins
         if st.session_state.admin_mob_number != '':
             mydb = db_cnx()
             cnx = mydb.cursor()
-            cnx.execute(f"select * from customers where Customer_Number = '{st.session_state.admin_mob_number}'")
+            cnx.execute(f"select * from admin where phone_number = '{st.session_state.admin_mob_number}'")
             admin_mob_number_msg = cnx.fetchall()
             cnx.close()
             if admin_mob_number_msg:
@@ -59,7 +58,7 @@ def add_admin():  # added this function to register admins
         if st.session_state.admin_email != '':
             mydb = db_cnx()
             cnx = mydb.cursor()
-            cnx.execute(f"select * from customers where Customer_Email = '{st.session_state.admin_email}'")
+            cnx.execute(f"select * from admin where mail_id = '{st.session_state.admin_email}'")
             admin_email_msg = cnx.fetchall()
             cnx.close()
             if admin_email_msg:
@@ -74,8 +73,17 @@ def add_admin():  # added this function to register admins
         add_confirm_password = st.session_state.admin_confirm_password
         add_mob_number = st.session_state.admin_mob_number
         add_email = st.session_state.admin_email
-
-        if add_password == add_confirm_password:
+        if add_user_name == '':
+            st.error('Enter Username')
+        elif add_password == '':
+            st.error('Enter Password')
+        elif add_confirm_password == '':
+            st.error('Enter Password again')
+        elif add_mob_number == '':
+            st.error('Enter Mobile Number')
+        elif add_email == '':
+            st.error('Enter email')
+        elif add_password == add_confirm_password:
             passwd = add_password
             passwd = passwd.encode()
             key = b'j8rS20etwOw1qH8XeznLLz_tpmwEUuXhKUs_oS8XgOY='
@@ -109,8 +117,22 @@ def add_admin():  # added this function to register admins
                 cnx.execute(sql2, data2)
                 mydb.commit()
                 mydb.close()
-                st.success("Account Created please Login")
-                st.button("Click here to go to home", on_click=click_home)
+                success = st.success("Account Created please Login")
+                # btn = st.button("Click here to go to home")
+                # if btn:
+                #     switch_page("Home")
+                # st.markdown("[Click here to go to home](Home)")
+                modal = Modal(key="Popup", title="Account Created!")
+                if success:
+                    for col7 in st.columns(1):
+                        with col7:
+                            with modal.container():
+                                ph = st.empty()
+                                n = 5
+                                for secs in range(n, -1, -1):
+                                    ph.metric('Redirecting to home in...', f'{secs:02d}', 'seconds')
+                                    time.sleep(1)
+                                switch_page('Home')
 
         else:
             st.error("Passwords do not match.")
@@ -124,11 +146,14 @@ def admin_auth():
         add_admin()
     else:
         st.success("You are already logged in")
-        st.button("Click here to go to home", on_click=click_home)
+        btn = st.button("Go Home")
+        if btn:
+            switch_page("Home")
 
 
-st.title("Welcome to Admin Registration")
+st.title("Admin Registration")
 st.image("banner_4.jpg")
 admin_auth()
 if ('Logged_Username' in st.session_state) and ('User_Role' in st.session_state):
     switch_page('Home')
+
