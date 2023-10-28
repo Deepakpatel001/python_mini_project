@@ -114,7 +114,22 @@ def add_customer():
         add_mob_number = st.session_state.add_mob_number
         add_email = st.session_state.add_email
 
-        if add_password == add_confirm_password:
+        if add_first_name == '':
+            st.error('Enter First Name')
+        elif add_last_name == '':
+            st.error('Enter Last Name')
+        elif add_mob_number == '':
+            st.error('Enter Mobile Number')
+        elif add_email == '':
+            st.error('Enter email')
+        elif add_user_name == '':
+            st.error('Enter Username')
+        elif add_password == '':
+            st.error('Enter Password')
+        elif add_confirm_password == '':
+            st.error('Enter Password again')
+
+        elif add_password == add_confirm_password:
             passwd = add_password
             passwd = passwd.encode()
             key = b'j8rS20etwOw1qH8XeznLLz_tpmwEUuXhKUs_oS8XgOY='
